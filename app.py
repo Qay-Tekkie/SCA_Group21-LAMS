@@ -58,14 +58,6 @@ class UserModel(db.Model):
             }
         return {'users': list(map(lambda x: to_json(x), UserModel.query.all()))}
 
-    @classmethod
-    def delete_all(cls):
-        try:
-            num_rows_deleted = db.session.query(cls).delete()
-            db.session.commit()
-            return {'message': '{} row(s) deleted'.format(num_rows_deleted)}
-        except:
-            return {'message': 'Something went wrong'}
 
     @staticmethod
     def generate_hash(password):
@@ -74,7 +66,6 @@ class UserModel(db.Model):
     @staticmethod
     def verify_hash(password, hash):
         return sha256.verify(password, hash)
-
 
 class UserRegistration(Resource):
     def post(self):
@@ -111,12 +102,8 @@ class UserLogin(Resource):
             return {'message': 'User {} doesn\'t exist'.format(data['username'])}
         
         if UserModel.verify_hash(data['password'], current_user.password):
-            # access_token = create_access_token(identity = data['username'])
-            # refresh_token = create_refresh_token(identity = data['username'])
             return {
                 'message': 'Logged in as {}'.format(current_user.username),
-                # 'access_token': access_token,
-                # 'refresh_token': refresh_token
                 }
         else:
             return {'message': 'Wrong credentials'}
