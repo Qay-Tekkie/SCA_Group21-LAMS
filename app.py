@@ -7,7 +7,6 @@ from flask_jwt_extended import (create_access_token, create_refresh_token, jwt_r
 from passlib.hash import pbkdf2_sha256 as sha256
 
 
-
 app = Flask(__name__)
 api = Api(app)
 
