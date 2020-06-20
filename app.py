@@ -10,7 +10,7 @@ from passlib.hash import pbkdf2_sha256 as sha256
 app = Flask(__name__)
 api = Api(app)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///C:/Users/Owner/Documents/Projects/SCA_Group21-LAMS-develop/database/test.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'some-secret-string'
  
@@ -32,6 +32,10 @@ parser = reqparse.RequestParser()
 parser.add_argument('username', help = 'This field cannot be blank', required = True)
 parser.add_argument('email', help = 'This field cannot be blank', required = True)
 parser.add_argument('password', help = 'This field cannot be blank', required = True)
+
+@app.route('/')
+def home():
+    return 'Library Asset Management System'
 
 
 class UserModel(db.Model):
@@ -110,12 +114,8 @@ class UserRegistration(Resource):
         
         try:
             new_user.save_to_db()
-            # access_token = create_access_token(identity = data['username'])
-            # refresh_token = create_refresh_token(identity = data['username'])
             return {
                 'message': 'User {} was created'.format(data['username']),
-                # 'access_token': access_token,
-                # 'refresh_token': refresh_token
                 }
         except:
             return {'message': 'Something went wrong'}, 500
@@ -136,12 +136,8 @@ class AdminRegistration(Resource):
         
         try:
             admin.save_to_db()
-            # access_token = create_access_token(identity = data['username'])
-            # refresh_token = create_refresh_token(identity = data['username'])
             return {
                 'message': 'User {} was created'.format(data['username']),
-                # 'access_token': access_token,
-                # 'refresh_token': refresh_token
                 }
         except:
             return {'message': 'Something went wrong'}, 500
@@ -173,12 +169,8 @@ class AdminLogin(Resource):
             return {'message': 'Admin {} doesn\'t exist'.format(data['username'])}
         
         if AdminModel.verify_hash(data['password'], current_admin.password):
-            # access_token = create_access_token(identity = data['username'])
-            # refresh_token = create_refresh_token(identity = data['username'])
             return {
                 'message': 'Logged in as {}'.format(current_admin.username),
-                # 'access_token': access_token,
-                # 'refresh_token': refresh_token
                 }
         else:
             return {'message': 'Access declined'}
