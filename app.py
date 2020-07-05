@@ -33,6 +33,11 @@ parser.add_argument('username', help = 'This field cannot be blank', required = 
 parser.add_argument('email', help = 'This field cannot be blank', required = True)
 parser.add_argument('password', help = 'This field cannot be blank', required = True)
 
+parser2 = reqparse.RequestParser()
+parser2.add_argument('username', help = 'This field cannot be blank', required = True)
+#parser.add_argument('email', help = 'This field cannot be blank', required = True)
+parser2.add_argument('password', help = 'This field cannot be blank', required = True)
+
 @app.route('/')
 def home():
     return 'Library Asset Management System'
@@ -145,7 +150,7 @@ class AdminRegistration(Resource):
 
 class UserLogin(Resource):
     def post(self):
-        data = parser.parse_args()
+        data = parser2.parse_args()
         current_user = UserModel.find_by_username(data['username'])
 
         if not current_user:
@@ -162,7 +167,7 @@ class UserLogin(Resource):
 
 class AdminLogin(Resource):
     def post(self):
-        data = parser.parse_args()
+        data = parser2.parse_args()
         current_admin = AdminModel.find_by_username(data['username'])
 
         if not current_admin:
